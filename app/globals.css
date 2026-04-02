@@ -1,0 +1,32 @@
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  margin: 1rem;
+}
+
+.muted {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.heavy-demo {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 40rem;
+}
+
+.heavy-demo h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.heavy-demo ul {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.heavy-demo li {
+  margin-bottom: 0.5rem;
+}

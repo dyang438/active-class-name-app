@@ -1,9 +1,15 @@
 import Nav from "../components/Nav";
+import ExpensiveHero from "../components/ExpensiveHero";
+import HeavyClientDemo from "../components/HeavyClientDemo";
+
+/** Avoid running naiveFib during `next build` — only on each request. */
+export const dynamic = "force-dynamic";
 
 const IndexPage = () => (
   <>
     <Nav />
-    <p>Hello, I'm the index page</p>
+    <ExpensiveHero />
+    <HeavyClientDemo />
   </>
 );
 
