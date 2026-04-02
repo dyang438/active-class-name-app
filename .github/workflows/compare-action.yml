@@ -3,6 +3,7 @@
 #
 # Repo variable (optional): SITE_SPEED_DEMO_REPO — GitHub repo slug for site_speed_demo
 # (default dyang438/site_speed_demo). Set in Settings → Variables if you fork under another name.
+# The orchestrator repo must be readable by GITHUB_TOKEN (e.g. public, or use a PAT on checkout).
 #
 # Env vars passed to compare-action (see site_speed_demo/gha-scripts/compare-action.ts):
 #   COMPARE_REPO_ROOT      — absolute path to this app’s clone (set below)
