@@ -1,0 +1,65 @@
+# Runs site_speed_demo’s compare-action against this repo: builds BASE vs TARGET commits
+# and times GET /api/health. Requires the orchestrator repo (gha-scripts) as a second checkout.
+#
+# Repo variable (optional): SITE_SPEED_DEMO_REPO — GitHub repo slug for site_speed_demo
+# (default dyang438/site_speed_demo). Set in Settings → Variables if you fork under another name.
+#
+# Env vars passed to compare-action (see site_speed_demo/gha-scripts/compare-action.ts):
+#   COMPARE_REPO_ROOT      — absolute path to this app’s clone (set below)
+#   COMPARE_COMMIT_BASE    — default HEAD~1
+#   COMPARE_COMMIT_TARGET  — default HEAD
+#   COMPARE_PORT           — optional, default 3010
+#   COMPARE_API_PATH       — optional, default /api/health
+#   COMPARE_START_TIMEOUT_MS — optional, default 120000
+#
+# GitHub Actions sets GITHUB_* automatically; resolveGitHubRunContext() uses them on the runner.
+
+name: Compare commits (compare-action)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo (full history for HEAD~1 vs HEAD)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: active-class-name-app
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Check out site_speed_demo (orchestrator + gha-scripts)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.SITE_SPEED_DEMO_REPO || 'dyang438/site_speed_demo' }}
+          path: site_speed_demo
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+          cache-dependency-path: site_speed_demo/pnpm-lock.yaml
+
+      - name: Install site_speed_demo dependencies
+        working-directory: site_speed_demo
+        run: pnpm install --frozen-lockfile
+
+      - name: Run compare-action
+        working-directory: site_speed_demo
+        env:
+          COMPARE_REPO_ROOT: ${{ github.workspace }}/active-class-name-app
+          COMPARE_COMMIT_BASE: HEAD~1
+          COMPARE_COMMIT_TARGET: HEAD
+        run: pnpm run ci -- --run compare-action

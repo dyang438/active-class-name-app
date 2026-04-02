@@ -1,9 +1,11 @@
 import Nav from "../../components/Nav";
+import AboutCpuDemo from "../../components/AboutCpuDemo";
 
 const AboutPage = () => (
   <>
     <Nav />
-    <p>Hello, I'm the about page</p>
+    <p>Hello, I&apos;m the about page</p>
+    <AboutCpuDemo />
   </>
 );
 
